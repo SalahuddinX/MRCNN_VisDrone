@@ -9,7 +9,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 import mrcnn.utils
-import mrcnn.model as modellib
+import mrcnn.model_old as modellib
 import mrcnn.visualize as visualize
 from mrcnn.config import Config
 

@@ -3,6 +3,7 @@ from PIL import Image
 from mrcnn.config import Config
 import mrcnn.utils as utils
 
+
 ### Configurations
 class VisDroneConfig(Config):
     """Configuration for training on the mirror dataset.
@@ -18,7 +19,7 @@ class VisDroneConfig(Config):
     IMAGES_PER_GPU = 1
 
     # Number of classes (including background)
-    NUM_CLASSES = 2 + 10  # background + 10 category
+    NUM_CLASSES = 10  # background + 10 category
 
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
@@ -37,7 +38,7 @@ class VisDroneConfig(Config):
     #         size IMAGE_MIN_DIM x IMAGE_MIN_DIM. Can be used in training only.
     #         IMAGE_MAX_DIM is not used in this mode.
     IMAGE_MIN_DIM = 1600
-    IMAGE_MAX_DIM = 2560 # in square mode, return an image of 2560*2560.
+    IMAGE_MAX_DIM = 2560  # in square mode, return an image of 2560*2560.
 
     BACKBONE_STRIDES = [4, 8, 16, 32, 64, 128]
     # RPN_ANCHOR_SCALES = (8, 16, 32, 64, 128, 256)  # anchor side in pixels
@@ -62,7 +63,7 @@ class VisDroneConfig(Config):
 class VisDroneDataset(utils.Dataset):
 
     # TaylorMei
-    def load_VisDrone(self, count, img_folder, imglist, dataset_path):
+    def load_VisDrone(self, count, img_folder, imglist, _ann_path):
         self.add_class("VisDrone", 1, "pedestrian")
         self.add_class("VisDrone", 2, "people")
         self.add_class("VisDrone", 3, "bicycle")
@@ -75,9 +76,8 @@ class VisDroneDataset(utils.Dataset):
         self.add_class("VisDrone", 10, "motor")
         for i in range(count):
             image_name = imglist[i].split(".")[0]
-            anno_path = dataset_path + "/annotations/" + image_name + ".txt"
-            self.add_image("VisDrone", image_id=i, path=img_folder + "/" + imglist[i],
-                        anno_path=anno_path)
+            anno_path = rf"{_ann_path}\{image_name}.txt"
+            self.add_image("VisDrone", image_id=i, path=rf"{img_folder}\{imglist[i]}", anno_path=anno_path)
 
     # TaylorMei
     def load_anno(self, image_id):
@@ -95,6 +95,3 @@ class VisDroneDataset(utils.Dataset):
             label_txt.close()
 
         return label, count
-
-
-
